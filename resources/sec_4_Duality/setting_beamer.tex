@@ -1,0 +1,493 @@
+ % 1. packages
+
+ % ----------- fonts and symbles ---------
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+%\usepackage{CJK}
+\usepackage{dsfont}
+\usepackage{mathrsfs}
+\usepackage{eucal} % for \mathcal
+
+%\renewcommand{\rmdefault}{ptm}
+
+
+%\usepackage{fontspec}
+%\newfontfamily\monaco{Monaco}
+
+%\usepackage{mathbbold} %,bbold
+
+ \usepackage{textcomp} % for \textnormal{\textperthousand}
+% -----------------
+
+
+
+
+
+%\usepackage{slashbox}
+%\usepackage[margin=2.2cm]{geometry} % |geometry| package clash with |booktabs| package
+%\usepackage{cases}
+% -------- tables -------
+\usepackage{booktabs} % for \toprule, \bottomrule
+\usepackage{tabularx}
+\usepackage{multirow}
+% --------- figures ---------
+\usepackage{graphicx}
+% ---------- algorithms -------
+\usepackage{algorithm}
+\usepackage{algorithmic}
+%\usepackage{footnote}
+    % |footnote| package occurs error:
+    % Runaway argument?
+    % \def \insertfootnotetext {\@@ }\def \insertfootnotemark {\@makefnmark \ETC.
+
+\usepackage{listings}
+
+\usepackage[linewidth=1pt]{mdframed} % for  mdframe environment
+
+
+
+
+ \usepackage{color}
+ \usepackage{xcolor}     %¸ßÁÁÊ¹ÓÃµÄÑÕÉ«
+
+\usepackage{setspace}
+%%\usepackage{type1cm}
+\usepackage{adjustbox} % for \adjustbox
+
+\usepackage{accsupp}
+\newcommand{\emptyaccsupp}[1]{\BeginAccSupp{ActualText={}}#1\EndAccSupp{}}
+
+
+
+
+%%   figures and tables
+\graphicspath{{figure/}}
+
+
+% 2. new commands
+
+% 2.0 common commands
+%\newcommand{\bc}{\begin{center}}
+%\newcommand{\ec}{\end{center}}
+%\newcommand{\ba}{\begin{array}}
+%\newcommand{\ea}{\end{array}}
+%\newcommand{\be}{\begin{equation}}
+%\newcommand{\ee}{\end{equation}}
+
+% 2.1 colors
+\definecolor{dgrey}{rgb}{0.30,0.30,0.30}
+\definecolor{lred}{rgb}{0.50,0.00,0.50}
+\definecolor{lblue}{rgb}{0.8,0.8,1}
+\definecolor{dred}{rgb}{0.6,0,0}
+\definecolor{dblue}{rgb}{0,0,0.5}
+\definecolor{dgrey}{rgb}{0.35,0.35,0.35}
+\definecolor{rred}{rgb}{0.9,0,0}
+\definecolor{mylblue}{rgb}{0.3,0.2, 0.8}
+
+\definecolor{commentcolor}{RGB}{85,139,78}
+\definecolor{stringcolor}{RGB}{206,145,108}
+\definecolor{keywordcolor}{RGB}{34,34,250}
+\definecolor{backcolor}{RGB}{220,220,220}
+
+\newcommand{\blue}[1]{{\color{blue}#1}}
+\newcommand{\dblue}[1]{{\color{dblue}#1} }
+\newcommand{\red}[1]{{\color{red}#1}}
+\newcommand{\dred}[1]{{\color{dred}#1}}
+\newcommand{\cyan}[1]{{\color{cyan}#1}}
+\newcommand{\bfblue}[1]{\textbf{\color{dblue}#1} }
+\newcommand{\bfred}[1]{\textbf{\color{dred}#1} }
+\newcommand{\green}[1]{{\color{green}#1}}
+%\newcommand{\alert}[1]{{\color{red}#1}}
+\newcommand{\black}[1]{{\color{black}#1}}
+\newcommand{\light}[1]{{\color{blue}\textbf{#1}}}
+\newcommand{\hot}[1]{{\color{dred}#1}}
+ \newcommand{\highlight}[1]{ \textbf{\color{mylblue}#1}}
+ \newcommand{\important}[1]{{\color{red}#1}} % for highlighting  some words
+
+ \newcommand{\mystar}{\dred{$^{\clubsuit}$ }}
+  \newcommand{\doublestar}{\dred{$^{\clubsuit\clubsuit}$ }}
+
+\newcommand{\mynote}[1]{{\footnotesize \color{mylblue}#1}}
+
+ \newcommand{\hint}[1]{{\small \color{mylblue}#1}}
+\newcommand{\smallhint}[1]{{\small \color{dgrey}#1}}
+\newcommand{\footnotehint}[1]{{\footnotesize \color{dgrey}#1}}
+\newcommand{\tinyhint}[1]{{\tiny \color{dgrey}#1}}
+\newcommand{\mytitle}[1]{\medskip{\large \textbf{\color{mylblue}#1}}}
+\newcommand{\normaltitle}[1]{\medskip{ \textbf{\color{mylblue}#1}}}
+
+%\newcommand{\head}[1]{\textbf{\large\color{blue}#1}}
+%\newcommand{\heading}[1]{\textbf{\large\color{blue}#1}}
+
+\newcommand{\myfbox}[2]{ \bigskip \begin{center} \fbox{\parbox{#1}{ #2  }} \end{center}\bigskip }
+
+\newcommand{\myvar}[1]{}
+%\newcommand{\mynote}[1]{#1}
+
+% 2.2 mathematical symbols
+
+\newcommand{\drightarrow}{\stackrel{d.}{\rightarrow}}
+\newcommand{\prightarrow}{\stackrel{p.}{\rightarrow}}
+\newcommand{\bernoulli}{\textnormal{Ber}}
+\newcommand{\cov}{\mathsf{Cov}}
+\newcommand{\corr}{\mathbf{Corr}}
+\newcommand{\regret}{\textnormal{Regret}}
+\newcommand{\conv}{\textnormal{conv}}
+\newcommand{\dotdiv}{\stackrel{\centerdot}{-}}
+\newcommand{\dom}{\textnormal{dom}}
+\newcommand{\convergenceinprob}{\stackrel{P}{\rightarrow}}
+\newcommand{\convergenceindist}{\rightsquigarrow}
+\newcommand{\probability}{\mathbb{P}}
+\newcommand{\expectation}{\mathbb{E}}
+\newcommand{\epi}{\textnormal{epi}}
+\newcommand{\variance}{\mathbb{V}}
+\newcommand{\var}[1]{\mathbb{V}(#1)}
+\newcommand{\covariance}{\mathsf{Cov}}
+\newcommand{\empiricalrisk}[1]{\hat{R}(#1)}
+\newcommand{\expectedrisk}[1]{R(#1)}
+\newcommand{\mgf}[1]{\psi_{#1}(\lambda)}
+\newcommand{\mgfexpansion}[1]{\expectation[e^{\lambda#1}]}
+\newcommand{\mgfmultivariate}[1]{\expectation[e^{\lambda^\transpose#1}]}
+\newcommand{\transpose}{{\mathsf{T}}}
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\gaussian}[2]{\mathcal{N}(#1,#2)}
+\newcommand{\subGaussian}[1]{\mathsf{subG}(#1)}
+\newcommand{\indicator}[1]{\mathbb{I}[#1]}
+\newcommand{\x}[1]{x^{(#1)}}
+\newcommand{\y}[1]{y^{(#1)}}
+\newcommand{\z}[1]{z^{(#1)}}
+\newcommand{\feature}{x}
+\newcommand{\response}{y}
+\newcommand{\supofempiricalprocess}{\|\mathbb{P}_n-\mathbb{P}\|_{\decisionspace}}
+\newcommand{\decisionspace}{\mathscr{F}}
+\newcommand{\decisionfunction}{f}
+\newcommand{\featurespace}{\mathcal{X}}
+\newcommand{\classifierestimate}{\widehat{h}}
+\newcommand{\classifiertrue}{h^\star}
+\newcommand{\classifier}{h}
+\newcommand{\hypothesisclass}{\mathcal{H}}
+\newcommand{\dataset}{\mathcal{D}}
+\newcommand{\defineas}{\stackrel{\textnormal{def}}{=}}
+\newcommand{\rademachercomplexity}[1]{\mathsf{Rad}_n\left(#1\right)}
+\newcommand{\loss}{\ell}
+\newcommand{\composite}{\circ}
+\newcommand{\convexhull}{\mathsf{conv}}
+\newcommand{\norm}[2][2]{\|#2\|_{#1}}
+\newcommand{\shatteringcoefficient}[2]{\mathcal{S}(#1,#2)}
+\newcommand{\vcdimension}[1]{\mathsf{VC}\left(#1\right)}
+\newcommand{\rank}{\mathsf{rank}}
+\newcommand{\innerproduct}[2]{\left\langle #1, #2\right\rangle}
+\newcommand{\modelparameter}{\theta}
+\newcommand{\ball}[3][]{\mathcal{B}_{{#1}}\left(#2,#3\right)}
+\newcommand{\metric}{d}
+\newcommand{\coveringnumber}[4][]{N_{{#1}}\left(#2,#3,#4\right)}
+\newcommand{\trace}{\textnormal{tr}}
+\newcommand{\std}{\textnormal{std}}
+\newcommand{\sgn}{\textnormal{sign}}
+%\renewcommand{\span}{\textnormal{span}}
+
+ % do not overwrite the existing command \span
+ % as it leads to an error of
+ %  "Missing # Inserted in Alignment Preamble" for ``align'' environment
+
+\newcommand{\myspan}{\textnormal{span}}
+
+%%%
+\newcommand{\rightarrowd}{\stackrel{d}{\rightarrow}}
+\newcommand{\rightarrowp}{\stackrel{p}{\rightarrow}}
+\newcommand{\defeq}{ \stackrel{\textnormal{def}}{=}}
+\newcommand{\proj}{ \textnormal{Proj}}
+\newcommand{\dist}{\textnormal{dist}}
+
+\newcommand{\argmax}{\textnormal{argmax}}
+\newcommand{\argmin}{\textnormal{argmin}}
+\newcommand{\subg}{\textnormal{subG}}
+
+
+ \newcommand{\bba}{\mathbb{A}}
+\newcommand{\bbb}{\mathbb{B}}
+\newcommand{\bbc}{\mathbb{C}}
+\newcommand{\bbd}{\mathbb{D}}
+\newcommand{\bbe}{\mathbb{E}}
+\newcommand{\bbf}{\mathbb{F}}
+\newcommand{\bbg}{\mathbb{G}}
+\newcommand{\bbh}{\mathbb{H}}
+\newcommand{\bbi}{\mathbb{I}}
+\newcommand{\bbj}{\mathbb{J}}
+\newcommand{\bbk}{\mathbb{K}}
+\newcommand{\bbl}{\mathbb{L}}
+\newcommand{\bbm}{\mathbb{M}}
+\newcommand{\bbn}{\mathbb{N}}
+\newcommand{\bbo}{\mathbb{O}}
+\newcommand{\bbp}{\mathbb{P}}
+\newcommand{\bbq}{\mathbb{Q}}
+\newcommand{\bbr}{\mathbb{R}}
+\newcommand{\bbs}{\mathbb{S}}
+\newcommand{\bbt}{\mathbb{T}}
+\newcommand{\bbu}{\mathbb{U}}
+\newcommand{\bbv}{\mathbb{V}}
+\newcommand{\bbw}{\mathbb{W}}
+\newcommand{\bbx}{\mathbb{X}}
+\newcommand{\bby}{\mathbb{Y}}
+\newcommand{\bbz}{\mathbb{Z}}
+
+\newcommand{\bfa}{\mathbf{a}}
+\newcommand{\bfb}{\mathbf{b}}
+\newcommand{\bfc}{\mathbf{c}}
+\newcommand{\bfd}{\mathbf{d}}
+\newcommand{\bfe}{\mathbf{e}}
+\newcommand{\bff}{\mathbf{f}}
+\newcommand{\bfg}{\mathbf{g}}
+\newcommand{\bfh}{\mathbf{h}}
+\newcommand{\bfi}{\mathbf{i}}
+\newcommand{\bfj}{\mathbf{j}}
+\newcommand{\bfk}{\mathbf{k}}
+\newcommand{\bfl}{\mathbf{l}}
+\newcommand{\bfm}{\mathbf{m}}
+\newcommand{\bfn}{\mathbf{n}}
+\newcommand{\bfo}{\mathbf{o}}
+\newcommand{\bfp}{\mathbf{p}}
+\newcommand{\bfq}{\mathbf{q}}
+\newcommand{\bfr}{\mathbf{r}}
+\newcommand{\bfs}{\mathbf{s}}
+\newcommand{\bft}{\mathbf{t}}
+\newcommand{\bfu}{\mathbf{u}}
+\newcommand{\bfv}{\mathbf{v}}
+\newcommand{\bfw}{\mathbf{w}}
+\newcommand{\bfx}{\mathbf{x}}
+\newcommand{\bfy}{\mathbf{y}}
+\newcommand{\bfz}{\mathbf{z}}
+
+\newcommand{\bfA}{\mathbf{A}}
+\newcommand{\bfB}{\mathbf{B}}
+\newcommand{\bfC}{\mathbf{C}}
+\newcommand{\bfD}{\mathbf{D}}
+\newcommand{\bfE}{\mathbf{E}}
+\newcommand{\bfF}{\mathbf{F}}
+\newcommand{\bfG}{\mathbf{G}}
+\newcommand{\bfH}{\mathbf{H}}
+\newcommand{\bfI}{\mathbf{I}}
+\newcommand{\bfJ}{\mathbf{J}}
+\newcommand{\bfK}{\mathbf{K}}
+\newcommand{\bfL}{\mathbf{L}}
+\newcommand{\bfM}{\mathbf{M}}
+\newcommand{\bfN}{\mathbf{N}}
+\newcommand{\bfO}{\mathbf{O}}
+\newcommand{\bfP}{\mathbf{P}}
+\newcommand{\bfQ}{\mathbf{Q}}
+\newcommand{\bfR}{\mathbf{R}}
+\newcommand{\bfS}{\mathbf{S}}
+\newcommand{\bfT}{\mathbf{T}}
+\newcommand{\bfU}{\mathbf{U}}
+\newcommand{\bfV}{\mathbf{V}}
+\newcommand{\bfW}{\mathbf{W}}
+\newcommand{\bfX}{\mathbf{X}}
+\newcommand{\bfY}{\mathbf{Y}}
+\newcommand{\bfZ}{\mathbf{Z}}
+
+
+\newcommand{\bfSigma}{\mathbf{\Sigma}}
+\newcommand{\bfrho}{\mathbf{\rho}}
+
+\newcommand{\cala}{\mathcal{A}}
+\newcommand{\calb}{\mathcal{B}}
+\newcommand{\calc}{\mathcal{C}}
+\newcommand{\cald}{\mathcal{D}}
+\newcommand{\cale}{\mathcal{E}}
+\newcommand{\calf}{\mathcal{F}}
+\newcommand{\calg}{\mathcal{G}}
+\newcommand{\calh}{\mathcal{H}}
+\newcommand{\cali}{\mathcal{I}}
+\newcommand{\calj}{\mathcal{J}}
+\newcommand{\calk}{\mathcal{K}}
+\newcommand{\call}{\mathcal{L}}
+\newcommand{\calm}{\mathcal{M}}
+\newcommand{\caln}{\mathcal{N}}
+\newcommand{\calo}{\mathcal{O}}
+\newcommand{\calp}{\mathcal{P}}
+\newcommand{\calq}{\mathcal{Q}}
+\newcommand{\calr}{\mathcal{R}}
+\newcommand{\cals}{\mathcal{S}}
+\newcommand{\calt}{\mathcal{T}}
+\newcommand{\calu}{\mathcal{U}}
+\newcommand{\calv}{\mathcal{V}}
+\newcommand{\calw}{\mathcal{W}}
+\newcommand{\calx}{\mathcal{X}}
+\newcommand{\caly}{\mathcal{Y}}
+\newcommand{\calz}{\mathcal{Z}}
+
+
+% 3. theorem and environments
+
+%\newtheorem{theorem}{Theorem}%[section]
+\newtheorem{proposition}{Proposition}%[section]
+%\newtheorem{property}{Property}%[section]
+%\newtheorem{lemma}{Lemma}%[section]
+%\newtheorem{corollary}{Corollary}%[section]
+%\newtheorem{definition}{Definition}%[section]
+%\newtheorem{example}{Example}%[section]
+%\newtheorem{remark}{Remark}%[section]
+%\newtheorem{note}{Note}%[section]
+%\newtheorem{problem}{Problem}%[section]
+\newtheorem{exercise}{Exercise}
+%\newtheorem{assumption}{Assumption}
+\newtheorem*{lemma_star}{Lemma}
+\newtheorem*{theorem_star}{Theorem}
+
+%\newenvironment{summary}[1][Summary]{\par\medskip   \color{dred}\textbf{\large#1. } }{ \medskip}
+%\newenvironment{remark}[1][Remark]{\par\medskip  \begin{small} \color{dblue}\textbf{#1. } }{ \end{small}\medskip}
+%\renewenvironment{proof}[1][Proof]{\noindent\textbf{#1.} }{\mbox{} \hfill{\small\textrm{$\Box$}}\vspace{1ex}}
+% \newenvironment{answer}[1][Answer]{\par\medskip \color{dblue}\textbf{\large#1. }}{ \medskip}
+
+\newenvironment{summary}[1][总结]{\par\medskip   \color{dred}\textbf{\large#1 } }{ \medskip}
+\newenvironment{remark}[1][注意]{\par\medskip   \color{dblue}\textbf{\large#1 } }{ \medskip}
+\newenvironment{footnoteremark}{ \color{dblue}\begin{footnotesize} }{\end{footnotesize}}
+\renewenvironment{proof}[1][证明]{\noindent\textbf{#1.} }{\mbox{} \hfill{\small\textrm{$\Box$}}\vspace{1ex}}
+ \newenvironment{question}[1][Q.]{\par\medskip {\color{lred}\large#1}}{ \medskip}
+ \newenvironment{answer}[1][Answer]{\par\medskip \color{dblue}\textbf{\large#1 }}{ \medskip}
+
+% 4. beamer setting
+
+
+
+
+%\newtheorem{definition}{\textbf{¶¨Òå}}[section]
+%\newtheorem{proposition}[definition] { \textbf{ÃüÌâ}}
+%\newtheorem{lemma}[definition] { \textbf{ÒýÀí}}
+%\newtheorem{theorem}[definition]{ \textbf{¶¨Àí}}
+%\newtheorem{corollary}[definition] { \textbf{ÍÆÂÛ}}
+%\newtheorem{remark}[definition] { \textbf{×¢}}
+%\newtheorem{example}[definition] { \textbf{Àý}}
+
+%\newcommand{\shadow}[1]{\begin{center}
+%\bf{\textcolor{dblue}{\shadowbox{\parbox{3.8in}
+% {\textcolor{red}
+% {\vspace{1mm}#1}}}}}
+%\end{center}}
+%
+%\newcommand{\head}[1]{\begin{center}
+%\bf{\textcolor{dblue}{\shadowbox{\parbox{3.8in}
+% {\textcolor{dred}
+% {\vspace{1mm}#1}}}}}
+%\end{center}}
+%
+%
+%\newcommand{\heading}[1]{%
+%  \begin{center}
+%    \large\bf
+%    \shadowbox{#1}%
+%  \end{center}
+%\vspace{1ex minus 1ex}}
+
+% set  space above and below math equations in display style
+
+\expandafter\def\expandafter\normalsize\expandafter{%
+    \normalsize
+    \setlength\abovedisplayskip{1.5ex}
+    \setlength\belowdisplayskip{1.2ex}
+    \setlength\abovedisplayshortskip{0.5ex}
+    \setlength\belowdisplayshortskip{0.5ex}
+}
+
+% Ìí¼ÓÒ³Âë´úÂë£¬¹È¸èÕÒµ½µÄ¡£
+\addtobeamertemplate{navigation symbols}{}{%
+    %\usebeamerfont{footline}%
+    %\usebeamercolor[fg]{footline}%
+    \setbeamercolor{footline}{fg=blue}
+    \setbeamerfont{footline}{series=\bfseries}
+    \hspace{1em}%
+    \normalsize{\insertframenumber/\inserttotalframenumber}
+}
+
+% section numbering
+\setbeamertemplate{section in toc}[sections numbered]
+\setbeamertemplate{subsection in toc}[subsections numbered]
+
+
+
+\lstset{                        %¸ßÁÁ´úÂëÉèÖÃ
+%basicstyle=\small, % print whole listing small
+%basicstyle=\footnotesize\sffamily, % print whole listing small
+basicstyle=\footnotesize\rmfamily, % print whole listing small
+%basicstyle=\rmfamily, % print whole listing small
+    language=python,                    %PythonÓï·¨¸ßÁÁ
+    %linewidth=0.9\linewidth,            %ÁÐ±ílist¿í¶È
+    %basicstyle=\ttfamily,              %ttÎÞ·¨ÏÔÊ¾¿Õ¸ñ
+    commentstyle=\color{commentcolor},  %×¢ÊÍÑÕÉ«
+    keywordstyle=\color{keywordcolor},  %¹Ø¼ü´ÊÑÕÉ«
+    stringstyle=\color{stringcolor},    %×Ö·û´®ÑÕÉ«
+    %showspaces=true,                   %ÏÔÊ¾¿Õ¸ñ
+    numbers=left,                       %ÐÐÊýÏÔÊ¾ÔÚ×ó²à
+    %numberstyle=\tiny\emptyaccsupp,     %ÐÐÊýÊý×Ö¸ñÊ½
+    numberstyle=\tiny,                  %ÐÐÊýÊý×Ö¸ñÊ½
+    numbersep=5pt,                      %Êý×Ö¼ä¸ô
+    frame=single,                       %¼Ó¿ò
+    framerule=0pt,                      %²»»®Ïß
+    %escapeinside=@@,                    %ÌÓÒÝ±êÖ¾
+    escapeinside=``,                    %ÌÓÒÝ±êÖ¾
+    emptylines=1,                       %
+    xleftmargin=3em,                    %list×ó±ß¾à
+    backgroundcolor=\color{backcolor},  %ÁÐ±í±³¾°É«
+    tabsize=4,                          %ÖÆ±í·û³¤¶ÈÎª4¸ö×Ö·û
+    %gobble=4                            %ºöÂÔÃ¿ÐÐ´úÂëÇ°4¸ö×Ö·û
+    breaklines=true,
+    extendedchars=false
+    }
+
+\lstdefinestyle{numbers}{numbers=left, stepnumber=1, numberstyle=\tiny, numbersep=10pt}
+ \lstdefinestyle{nonumbers}{numbers=none}
+
+\newcommand{\alertcode}[1]{{\color{red}#1}} % used for alerting codes
+
+%\lstset{numbers=left, numberstyle=\tiny,
+%keywordstyle=\color{blue!70},
+%commentstyle=\color{red!50!green!50!blue!50},
+%frame=shadowbox,
+%rulesepcolor=\color{red!20!green!20!blue!20},
+%escapeinside=``,
+%framesep = 2ex,
+%rulesep = 1ex
+%%framexrightmargin= 1em %
+%}
+
+
+% Vary the color applet  (try out your own if you like)
+\colorlet{structure}{red!65!black}
+
+%\beamertemplateshadingbackground{yellow!50}{white}
+
+
+%\setbeamerfont{normal text}{family=\rmfamily}
+%\setbeamerfont{frametitle}{family=\rmfamily}
+
+% Changing the fonts: this will make the slides more readable and the math look like regular tex math
+\usefonttheme{serif}
+
+
+
+% set spaces
+
+\setstretch{1.2}  % ÉèÖÃÐÐ¾à
+
+\addtobeamertemplate{block begin}{\setlength\abovedisplayskip{0pt}} % reduce the large space before a block
+
+% set section number styles
+
+
+
+\newcommand{\secno}{Sec.\,\thesection\ }
+\newcommand{\subsecno}{Sec.\,\thesubsection\ }
+
+% set logo
+
+ \pgfdeclareimage[width=1.0]{small-logo}{SMaLL.jpg}
+%
+ \logo{\vbox{\vskip0.1 \hbox{\pgfuseimage{small-logo}}}}
+
+% set math equation fontsize
+
+ \makeatletter
+\DeclareMathSizes{\f@size}{10}{5}{5}
+\makeatother
+
+% for chinese section name
+\hypersetup{CJKbookmarks=true}

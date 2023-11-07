@@ -1,0 +1,502 @@
+\documentclass[handout]{beamer}
+%\documentclass[UTF8]{ctexart}
+\usepackage{ctex}
+\usepackage{graphicx} %插入图片用
+\include{setting_beamer}
+
+\begin{document}
+	%\begin{CJK*}{GBK}{song}
+		
+		\lstdefinestyle{numbers}{numbers=left, stepnumber=1, numberstyle=\tiny, numbersep=10pt}
+		\lstdefinestyle{nonumbers}{numbers=none}
+		
+		\addtobeamertemplate{block begin}{\setlength\abovedisplayskip{0pt}}
+		
+		\setbeamertemplate{itemize items}{\color{black}$\bullet$}
+		
+		\title[Numerical Optimization]{5.10 进化算法}
+		
+		%\title[Python语言与数据分析]{数据分析实例：财政收入影响因素分析及预测}
+		
+		\bigskip
+		\author[]{
+			\underline{SMaLL} 
+		}
+		
+		
+		\institute[CUP]{
+			\inst{1}
+			中国石油大学（华东）\\
+			SMaLL 课题组\\
+				\blue{small.sem.upc.edu.cn}\\
+			liangxijunsd@163.com \\ 
+			
+			}
+			
+			\date[2023]{\small    2023}
+		
+			%{Most of the slides are 'stolen' from S. Boyd}\\ {\href{https://stanford.edu/~boyd/cvxbook/}{https://stanford.edu/~boyd/cvxbook/}}
+		
+		
+		
+		
+		\subject{optimization}
+		
+		\frame{\titlepage}
+		
+		%\frame{
+		%	\frametitle{Least Squares Problems}
+		%	\tableofcontents[hideallsubsections]
+		%}
+		
+		\AtBeginSection[]{
+			\begin{frame}
+				\frametitle{进化算法（Evolutionary Algorithm）}
+				\tableofcontents[current,currentsubsection]
+			\end{frame}
+		}
+		
+		
+		\section{进化算法简介}
+		
+		\begin{frame}[fragile]
+			\frametitle{进化算法简介}
+			\begin{itemize}
+				\item 	进化算法 是一类受自然界启发的智能搜索和优化技术的总称
+			
+			\item 自然界中的生物，不断繁殖后代，根据优胜劣汰的原则，不断地进化 
+			\item 进化算法: 借鉴生物进化的规律，  繁殖、竞争 $\rightarrow$优胜劣汰
+			$\rightarrow$逼近问题的最优解。
+			
+		
+			 
+		\end{itemize}
+		\end{frame}
+	
+	\begin{frame}
+		
+		\begin{minipage}{0.56\textwidth}
+			\begin{itemize}
+			\item 约翰·霍兰德（1929-2015） \footnotehint{美国科学家，安娜堡密歇根大学的电气工程与计算机科学教授，心理学教授， 遗传算法的研究先驱}
+		
+	
+	       \item 1975， 遗传算法的开创性著作《自然与人工系统的适应性》
+	    \end{itemize}
+	  \end{minipage}   
+  \qquad 
+	 \begin{minipage}{0.35\textwidth}
+	 	\begin{center}
+	 		\includegraphics[width=\textwidth]{John_Henry_Holland}
+	 	\end{center}
+	\end{minipage}
+		
+	\end{frame}
+		
+%		
+	\begin{frame}
+		\frametitle{ 基本思想}
+		
+		\begin{itemize}
+				\item 群体迭代进化。\\它们模拟由个体组成的群体的学习过程，其中每个个体表示给定问题搜索空间中的一个点。进化算法从选定的初始群体出发，通过不断迭代逐步改进当前群体，直至最后搜索到最优解或满意解。
+	\end{itemize}
+		
+	\end{frame}
+%		
+		
+		
+		
+		
+		\begin{frame}\frametitle{总体框架}
+			\begin{figure}[htbp]
+				\centering
+				\includegraphics[width=4cm,height=4.5cm]{1}
+				
+			\end{figure}
+			\begin{itemize}
+				\item 思想：\dred{群体迭代进化}
+				 初始群体 $\rightarrow$迭代逐步改进当前群$\rightarrow$ 搜索到 满意解。 
+				\item 重组算子：交叉和变异
+				\item 
+				\hint{重组算子}用于发现新的候选解 
+				\item \hint{替换/选择 算子}则用于确定群体下一步的进化方向 
+				
+			\end{itemize}
+			
+		\end{frame}
+		
+		
+		
+		
+		\begin{frame}
+			\frametitle{优缺点}
+			
+			\begin{itemize}
+				\item 优点：
+				
+				1.从一个群体(多个点)而不是一个点出发进行搜索；\\
+				2.易于并行计算；\\
+				3.根据适应值选择个体，\hint{采用自然进化机制来求解复杂的优化问题，仅涉及目标函数值的计算，不需要问题的梯度信息；} \\
+				4. \hint{一种基于群体的搜索技术} $\rightarrow$ 更强的搜索性能、鲁棒性\\
+				5.进化算法在搜索过程中不容易陷入较差的局部最优，即使在所定义的适应度函数是不连续的、非规则的或有噪声的情况下，它们也能以很大的概率找到较好的解；
+				
+				
+			\end{itemize}
+			
+	 
+			
+			\begin{itemize}
+				\item \dred{缺点：}
+				 
+			%	1.进化算法只需要用某种编码方式表达问题，然后根据适应值区分个体优劣，因此，编码问题以及合适的进化操作算子的选择需要针对具体问题具体分析，有时难以构造与选择；\\
+				
+				\dred{1. 应用：迭代次数(适应值评估次数)较多，收敛较慢 }\\
+				
+				2.理论： 进化算法的理论基础还相当弱 
+				
+				
+			\end{itemize}
+			
+		\end{frame}
+		
+		
+%		\begin{frame}
+%			\frametitle{4.发展与应用现状}
+%			
+%			\begin{itemize}
+%				\item  发展和应用现状：进化算法已在汽车设计、生产调度、电路设计、机器人规划、
+%				控制系统设计、电力系统优化设计、天线优化设计、化工过程设计、物流系统设计、
+%				时间表安排、任务分配、游戏设计等众多领域得到了十分广泛的应用，并取得了丰硕
+%				的成果。
+%				
+%				
+%				
+%			\end{itemize}
+%			
+%		\end{frame}
+		
+		
+	
+		
+		
+		
+%		\begin{frame}
+%			\frametitle{3.研究现状}
+%			\begin{itemize}
+%				\item DE的性能要依赖于试验向量产生策略(交叉算子、变异算子)和控制参数(群体规模NP、缩放因子F、交叉控制参数CR)，研究人员提出过许多DE的改进版本。\\
+%				\textbf{1.}一部分工作集中在改进试验向量产生策略上，例如提出一些新型算子。\\
+%				\textbf{2.}另一部分工作是调整DE的控制参数以改善其收敛速度和鲁棒性。
+%				\item 将DE与其它搜索算法或搜索技术进行结合。
+%				\item 在DE中，如何利用多种群进行搜索也是一个很有意义的研究方向。
+%			\end{itemize}
+%		\end{frame}
+%		
+		
+		
+			
+	\section{遗传算法}
+	
+	\begin{frame}
+		\frametitle{简介}
+		\begin{itemize}
+			\item 自然界中的生物，不断繁殖后代，根据优胜劣汰的原则，不断地进化。进化算法就是借用生物进化的规律，通过繁殖竞争再繁殖再竞争，实现优胜劣汰，一步一步逼近问题的最优解。	
+			\item 遗传算法起源于对生物系统所进行的计算机模拟研究。
+			\item 其本质是一种高效、并行、全局搜索的方法，能在搜索过程中自动获取和积累有关搜索空间的知识，并自适应地控制搜索过程以求得最佳解。
+			\item 遗传算法通过选择、交叉和变异操作来实现个体的更新。遗传算法中，交叉操作对产生新基因起主要作用。
+		\end{itemize}
+	\end{frame}
+	
+	
+	\begin{frame}
+		\frametitle{思想}
+		\begin{itemize}
+			\item 基本思想：遗传算法中每一条染色体，对应着遗传算法的一个解决方案，一般我们用适应性函数（fitness function）来衡量这个解决方案的优劣。
+			\item 所以从一个基因组到其解的适应度形成一个映射。可以把遗传算法的过程看作是一个在多元函数里面求最优解的过程。 可以这样想象，这个多维曲面里面有数不清的“山峰”，而这些山峰所对应的就是局部最优解。
+			\item 其中也会有一个“山峰”的海拔最高的，那么这个就是全局最优解。而遗传算法的任务就是尽量爬到最高峰，而不是陷落在一些小山峰。
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{思想}
+		\begin{figure}[htbp]
+			\centering
+			\includegraphics[width=7cm,height=6cm]{figure/3.png}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{一般步骤}
+		
+			 1. 评估每条染色体所对应个体的适应度。\\
+			2. 遵照适应度越高，选择概率越大的原则，从种群中选择两个个体作为父方和母方。\\
+			 3. 抽取父母双方的染色体，进行交叉，产生子代。\\
+			 4. 对子代的染色体进行变异。\\
+			 5. 重复2，3，4步骤，直到新种群的产生。	
+	
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{编码方法}
+		\begin{itemize}
+			\item 二进制编码
+			\item 浮点编码法
+			\item 符号编码法		
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{二进制编码}
+		\begin{itemize}
+			\item  一定长度的二进制编码序列，只能表示一定精度的浮点数。
+			\item  譬如我们要求解精确到六位小数，区间长度为3, 为了保证精度要求，至少把区间 [-1,2] 分为 $3 * 10^6$ 等份
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{选择算子}
+		\begin{itemize}
+			\item 轮盘赌选择
+			\item 随机竞争选择
+			\item 最佳保留选择
+			\item 无回放随机选择
+			\item 确定式选择
+			\item 均匀排序
+			\item 最佳保存策略
+			\item 随机联赛选择	
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{轮盘赌选择}
+		\begin{itemize}
+			\item  $F=\sum_{i=1}^Nf_i$
+			\item  $P_i=\frac{f_i}{F}$
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{轮盘赌选择}
+		\begin{figure}[htbp]
+			\centering
+			\includegraphics[width=7cm,height=4cm]{figure/4.png}
+		\end{figure}
+		\end{frame}
+	
+		\begin{frame}
+			\frametitle{随机竞争选择}
+			\begin{itemize}
+				\item  $ i \in N$   
+				\item  $ j \in N$
+				\item  $x_k = max\{x_i,x_j\}$
+			\end{itemize}
+			\end{frame}
+		
+			\begin{frame}
+				\frametitle{染色体交叉}
+				\begin{itemize}
+					\item 单点交叉
+					\item 两点交叉与多点交叉
+					\item 均匀交叉 (一致交叉)
+					\item 算术交叉	
+				\end{itemize}
+			\end{frame}
+			
+			\begin{frame}
+				\frametitle{两点交叉}
+				
+				\begin{figure}[htbp]
+					\centering
+					\includegraphics[width=6cm,height=5cm]{figure/5.png}
+				\end{figure}
+			\end{frame}
+			
+			\begin{frame}
+				\frametitle{基因突变}
+				\begin{itemize}
+					\item 基本位变异
+					\item 两点交叉与多点交叉
+					\item 边界变异
+					\item 非均匀变异	
+					\item 高斯近似变异
+				\end{itemize}
+			\end{frame}           
+			
+			
+			\begin{frame}
+				\frametitle{基本位变异}
+				\begin{itemize}
+					\item 对个体编码串中以变异概率、随机指定的某一位或某几位仅因座上的值做变异运算。
+					\item $101101001011001 \Rightarrow 001101011011001$
+				\end{itemize}
+			\end{frame}       
+			
+			\begin{frame}
+				\frametitle{边界变异}
+				随机的取基因座上的两个对应边界基因值之一去替代原有基因值。特别适用于最优点位于或接近于可行解的边界时的一类问题。
+			
+			\end{frame}     
+				
+		\section{差分进化算法（Differential Evolution）}
+		
+		\begin{frame}
+			\frametitle{差分进化算法简介}
+			
+			\begin{itemize}
+				\item 
+			差分进化算法（Differential Evolution）： 一种基于群体的随机并行搜索算法，它采用变异、交
+			叉、替换等算子指导群体进化 
+			
+			\item 
+			在进化过程中，DE保持一个规模为NP的群体(也就是群体中包含NP个个体，每
+			个个体为搜索空间中的一个点)，并通过迭代的方式改善群体质量 
+			
+		\end{itemize}
+		\end{frame}
+		
+		\begin{frame}
+			\frametitle{DE算法的两方面缺陷}
+			
+			\begin{itemize}
+				\item 种群个体无法继续寻找最优解，停止向全局最优方向进化的现象，即收缩停滞问题
+				\item 种群个体失去多样性，陷入局部最优解，即早熟收敛问题
+			\end{itemize}
+		相应的改进策略主要集中在以下4个方面：控制参数设置、进化策略选择、种群结构以及与其他优化算法混合。
+\end{frame}
+		
+		\begin{frame}
+			\frametitle{框架}
+			\begin{itemize}
+				\item \textbf{Step1 } \hint{初始群体} \\设置当前的代数 $G=0$ 
+				从搜索空间S中随机产生  NP个点$\vec{x}_{i, G}, \ldots, \vec{x}_{N P, G}$ 构成初始群体
+				\item \textbf{Step2 }\\针对群体中的每个个体$\vec{x}_{i, G}=\left(x_{i, 1, G}, x_{i, 2, G}, \ldots, x_{i, D, G}\right)$，执行变异、修补、交叉、替换4种操作。
+			\end{itemize}
+		\end{frame}
+		
+		
+		\begin{frame}
+			\frametitle{变异}
+			\begin{itemize}
+				\item \textbf{step2.1变异}： 用DE的变异算子产生一个变异向量$\vec{v}_{i, G}=\left(v_{i, 1, G}, v_{i, 2, G}, \ldots, v_{i, D, G}\right)$ 
+		 
+			\item 变异算子：
+			\quad \hint{$\vec{v}_{i, G}=\vec{x}_{r_1, G}+F \cdot\left(\vec{x}_{r_2, G}-\vec{x}_{r_3, G}\right)$}
+			其中， $r_1, r_2, r_3\in \{1, \ldots, N P\}$:随机选择、相互不同，
+			 $F$: 缩放因子 
+			 
+			
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width=4cm,height=4cm]{变异}	
+			\end{figure}
+		\end{itemize}
+		\end{frame}
+		
+		
+		
+		
+		\begin{frame}
+			\frametitle{修补}
+			\begin{itemize}
+				\item\textbf{Step2.2修补}：如果变异向量$\vec{v}_{t, G}$为不可行解（落在搜索空间S以外），采用修补算子对$\vec{v}_{t, G}$进行修补，使之成为可行解；
+			\end{itemize}
+		\end{frame}
+		
+		
+		
+		\begin{frame}
+			\frametitle{交叉}
+			\begin{itemize}
+				\item\textbf{Step2.3交叉}：对目标变量$\vec{x}_{t, G}$和变异向量$\vec{v}_{t, G}$，采用交叉算子产生一个试验向量$\vec{u}_{i, G}=\left(u_{i, 1, G}, u_{i, 2, G}, \ldots, u_{i, D, G}\right)$；
+				下面看一下二项式交叉。
+			\end{itemize}
+		\end{frame}
+		
+		
+		
+		\begin{frame}
+			\begin{figure}[htbp]
+				\centering
+				\includegraphics[width=5cm,height=4.5cm]{交叉2}	
+			\end{figure}
+			$$
+			u_{i, j, G}=\left\{\begin{array}{lc}
+				v_{i, j, G} & \text { 若 } \operatorname{rand}_{j}(0,1) \leq C R \text { 或 } j=j_{\text {rand }} \\
+				x_{i, j, G} & \text {否则  }
+			\end{array}\right.
+			$$
+			
+			其中, $j_{\text {rand }}$ 是在区间 $[1, D]$ 中随机选择的整数, $\operatorname{rand}_{j}(0,1)$ 是 0 到 1 之间均匀分布的随机
+			数, $C R \in(0,1]$ 称为交叉控制参数。由于 $j_{r a n d}$ 的使用， $\vec{u}_{i, G}$ 不同于 $\vec{x}_{i, G}$ 。
+			
+			
+			
+		\end{frame}
+		
+		
+		
+		
+		
+		\begin{frame}
+			\frametitle{替换}
+			\begin{itemize}
+				
+				\item\textbf{Step2.4替换}：如果$f\left(\vec{u}_{i, G}\right) \leq f\left(\vec{x}_{i, G}\right)$，令$\vec{x}_{i, G+1}=\vec{u}_{i, G}$；否则，令$\vec{x}_{i, G+1}=\vec{x}_{i, G}$。
+			\end{itemize}
+		\end{frame}
+		
+		
+		
+\begin{frame}
+			\frametitle{算法框架}
+			\begin{itemize}
+					\item 
+\textbf{Step\,1初始化种群} ：确定需要的参数，在给定搜索区间内随机生成初始的个体
+
+	\item
+\textbf{Step\,2.1变异}：变异算子：$n=a+F *(b-c)$ 
+
+	\item \textbf{Step\,2.2交叉} 
+
+	\item
+\textbf{Step\,2.3选择(替换)}：
+计算目标函数值，比较原始种群以及变异种群中的个体，选出下一代个体  \\
+
+	\item \textbf{Step3\,终止准则判断：}迭代,直到达到设定的最大代数
+			\end{itemize}
+\end{frame}
+		
+\begin{frame}
+	\frametitle{DE算法示意图}	
+	DE在二维搜索空间中的示意图
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=10cm,height=8cm]{DE算法二维搜索空间示意图}
+		
+	\end{figure}
+\end{frame}
+\begin{frame}
+			\frametitle{示例}
+			\begin{itemize}
+				\item 应用案例5.10.1   差分进化算法求解无约束二次优化问题   $f(x)=x_{1}^{2}+x_{2}^{2}$
+				
+			
+			\end{itemize}
+\end{frame}
+		
+				\begin{frame}
+			\frametitle{练习题}
+			\begin{itemize}
+				\item 应用   差分进化算法求解无约束二次优化问题     $  f=\sum_{i=1}^{N / 2}\left[\left(x_{2 i}-x_{2 i-1}^{2}\right)^{2}+\left(1-x_{2 i-1}\right)^{2}\right]$
+				
+				
+				%初始点 $x_{0}=(-1.2,1,-1.2,1, \ldots,-1.2,1)^{T} ;$
+				最优解  $x^{*}=(1,1, \ldots, 1)^{T} ;$
+				最优值  $f^{*}=0$.
+				
+				
+			\end{itemize}
+		\end{frame}
+		
+%	\end{CJK*}
+	
+	
+\end{document}

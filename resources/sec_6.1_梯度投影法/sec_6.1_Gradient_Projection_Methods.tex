@@ -1,0 +1,366 @@
+%\documentclass[10pt]{beamer}
+\documentclass[handout,10pt]{beamer}
+%\usepackage{xeCJK}
+\usepackage{ctex}
+
+%\usepackage[orientation=landscape,size=custom,width=16,height=12,scale=0.5,debug]{beamerposter}
+
+\include{setting_beamer}
+
+%\usepackage{hyperref}
+%\hypersetup{hidelinks,
+	%	colorlinks=true,
+	%	allcolors=black,
+	%	pdfstartview=Fit,
+	%	breaklinks=true}
+
+% set font size of the math equations
+\makeatletter
+\DeclareMathSizes{\f@size}{10}{5}{5}
+\makeatother
+
+\begin{document}
+	%\begin{CJK*}{GBK}{song}
+	\lstdefinestyle{numbers}{numbers=left, stepnumber=1, numberstyle=\tiny, numbersep=10pt}
+	\lstdefinestyle{nonumbers}{numbers=none}
+	
+	\addtobeamertemplate{block begin}{\setlength\abovedisplayskip{0pt}}
+	
+	\setbeamertemplate{itemize items}{\color{black}$\bullet$}
+	
+	\title[梯度投影法]{6.1 梯度投影法}
+
+\bigskip
+
+\author[]{
+	\underline{SMaLL} 
+}
+
+\institute[CUP]{
+	\inst{1}
+	中国石油大学（华东）\\
+	SMaLL 课题组   \\
+	\blue{small.sem.upc.edu.cn}\\
+	liangxijunsd@163.com \\ 
+	
+}
+
+\date[2023]{\small    2023}
+	\subject{6.1 梯度投影法}
+	
+	\frame{\titlepage}
+	
+	
+	
+	\AtBeginSection[]{
+		%\frame<handout:1>{
+			\begin{frame}
+				\frametitle{梯度投影法}
+				%\tableofcontents[current,currentsubsection]
+				%\tableofcontents[hideallsubsections,currentsection]
+				\tableofcontents[current,hideallsubsections]
+			\end{frame}
+			
+			%}
+	}
+	%%===================================================
+	\section{1. 基于投影方法的可行方向和步长规则}
+	
+	\begin{frame}
+		\frametitle{基于投影方法的可行方向}
+		
+		\begin{equation}
+			\begin{array}{cl}
+				\min_x & f(x) \\
+				s.t. & x\in X\\
+			\end{array}
+		\end{equation}
+		其中 $f$: 凸函数, $X\subseteq \bbr^n$: 凸集. 
+		
+		梯度投影法是一种可行方向法，具有下面的迭代格式: %of the form
+		$$
+		x^{k+1}=x^{k}+\alpha^{k}\left(\bar{x}^{k}-x^{k}\right)
+		$$
+		其中
+		$$
+		\bar{x}^{k}=\left[x^{k}-s^{k} \nabla f\left(x^{k}\right)\right]^{+}
+		$$
+		
+		\begin{itemize}
+			\item $[\cdot]^{+}$ 表示在集合$X$上的投影
+			\item $\alpha^{k} \in(0,1]$ 是步长
+			\item $s^{k}$ 是正数
+		\end{itemize}
+	\end{frame}
+	%---------------------------------------------
+	\begin{frame}
+		\frametitle{基于投影方法的可行方向}
+		$s^{k}$： 步长.
+		
+		
+		选择 $\alpha^{k} \equiv 1$
+		$\rightarrow$ $x^{k+1}=\bar{x}^{k}$,
+		$$
+		x^{k+1}=\left[x^{k}-s^{k} \nabla f\left(x^{k}\right)\right]^{+}
+		$$
+		
+		\onslide<2->{
+			\begin{figure}
+				\centering
+				\includegraphics[height=5cm,width=6cm]{picture/gradientProjection.png}
+			\end{figure}
+		}
+	\end{frame}
+	%----------------------------------------------
+	\begin{frame}
+		\frametitle{基于投影方法的可行方向}
+		$x^{*}=\left[x^{*}-s \nabla f\left(x^{*}\right)\right]^{+}$, $s>0$ $\leftrightarrow$ $x^{*}$是驻点
+		
+		\onslide<2->{
+			\begin{figure}
+				\centering
+				\includegraphics[height=5cm,width=5cm]{picture/stationary-point.png}
+			\end{figure}
+			
+			
+			算法停止 $\leftrightarrow$ 遇到驻点时
+		}
+	\end{frame}
+	%----------------------------------------------
+	\begin{frame}
+		\frametitle{基于投影方法的可行方向}
+		如果 $X$ 有相对简单的结构，投影运算通常有显式解
+		
+		\begin{example}
+			当约束集是由上下界限定给出的箱式集合,
+			
+			$$
+			X=\left\{x \mid \alpha_{i} \leq x_{i} \leq \beta_{i}, i=1, \ldots, n\right\}
+			$$
+			该集合投影向量 $x$的第$i$个分量由下式确定
+			
+			
+			$$
+			[x]_{i}^{+}=\left\{\begin{array}{ll}
+				\alpha_{i} & \text { 若 } x_{i} \leq \alpha_{i} \\
+				\beta_{i} & \text { 若 } x_{i} \geq \beta_{i} \\
+				x_{i} & \text { 否则 }
+			\end{array}\right.
+			$$
+		\end{example}
+	\end{frame}
+	%----------------------------------------------
+	\subsection{步长选择和收敛性}
+	
+	\begin{frame}
+		\frametitle{步长选择}
+		\begin{itemize}[<+->]
+			\item \textbf{固定步长规则}
+			
+			令$s^{k}$ 为常数 $s>0$
+			
+			$\alpha^{k}$ 固定为统一值
+			$$
+			s^{k}=s: \text { 常数 }, \quad \alpha^{k}=1, \quad k=0,1, \ldots
+			$$
+			
+			\item \textbf{缩减步长规则}
+			
+			$\alpha^{k}$ 为给定常数且
+			$$
+			s^{k} \rightarrow 0, \quad \sum_{k=0}^{\infty} s^{k}=\infty
+			$$
+		\end{itemize}
+	\end{frame}
+	%----------------------------------------------
+	\begin{frame}
+		\frametitle{步长选择}
+		\begin{itemize}
+			\item \textbf{有限最小化步长规则}
+			
+			$s^{k}=s$ :常数 , $k=0,1, \ldots$
+			
+			$\alpha^{k}$ 取 $[0,1]$且满足
+			$$
+			f\left(x^{k}+\alpha^{k}\left(\bar{x}^{k}-x^{k}\right)\right)=\min _{\alpha \in[0,1]} f\left(x^{k}+\alpha\left(\bar{x}^{k}-x^{k}\right)\right) .
+			$$
+			\onslide<2->{
+				\item \textbf{沿可行方向的 Armijo 规则}
+				
+				$s^{k}=s$ : 常数 , $k=0,1, \ldots$
+				
+				按 Armijo 规则选取$\alpha^{k}$$\in(0,1)$ 
+				\begin{itemize}
+					\item[-] 对给定的$\beta$和$\sigma$ $\in(0,1)$
+					\item[-]取 $\alpha^{k}=\beta^{m_{k}}$, 其中$m_{k}$是使下式成立的第一个非负整数$m$
+				\end{itemize}
+				$$
+				f\left(x^{k}\right)-f\left(x^{k}+\beta^{m}\left(\bar{x}^{k}-x^{k}\right)\right) \geq-\sigma \beta^{m} \nabla f\left(x^{k}\right)^{\prime}\left(\bar{x}^{k}-x^{k}\right)
+				$$
+			}
+		\end{itemize}
+	\end{frame}
+	%----------------------------------------------
+	\begin{frame}
+		\frametitle{步长选择}
+		\begin{itemize}
+			\item \textbf{沿投影弧的 Armijo 规则}
+			
+			取步长$\alpha^{k}$ 为给定值, 令 $\alpha^{k}=1, \quad k=0,1, \ldots$
+			
+			$s^{k}$ 逐渐地减小直到 Armijo 不等式成立
+			$\rightarrow$
+			$$
+			\left\{x^{k}(s) \mid s>0\right\}
+			$$
+			其中
+			$$
+			x^{k}(s)=\left[x^{k}-s \nabla f\left(x^{k}\right)\right]^{+},s>0
+			$$
+			\begin{itemize}
+				\item[-]选择 $\bar{s}>0, \beta \in(0,1)$, 且 $\sigma \in(0,1)$
+				\item[-]设 $s^{k}=\beta^{m_{k}} \bar{s}$,其中 $m_{k}$ 是使
+				下面的不等式成立的第一个非负整数$m$
+			\end{itemize}
+			$$
+			f\left(x^{k}\right)-f\left(x^{k}\left(\beta^{m} \bar{s}\right)\right) \geq \sigma \nabla f\left(x^{k}\right)^{\prime}\left(x^{k}-x^{k}\left(\beta^{m} \bar{s}\right)\right)
+			$$
+		\end{itemize}
+	\end{frame}
+	%----------------------------------------------
+	\subsection{收敛速度}
+	\begin{frame}
+		\frametitle{收敛速度}
+		例如，当目标函数 $f$ 是二次函数
+		$$
+		f(x)=\frac{1}{2} x^{\prime} Q x-b^{\prime} x,
+		$$
+		其中 $Q$ 是正定的.
+		
+		\onslide<2->{
+			设 $x^{*}$ 为$X$上$f$的唯一最小解 , 考虑给定步长的情况.
+			$$
+			\begin{aligned}
+				\left\|x^{k+1}-x^{*}\right\| &=\left\|\left[x^{k}-s \nabla f\left(x^{k}\right)\right]^{+}-\left[x^{*}-s \nabla f\left(x^{*}\right)\right]^{+}\right\| \\
+				& \leq\left\|\left(x^{k}-s \nabla f\left(x^{k}\right)\right)-\left(x^{*}-s \nabla f\left(x^{*}\right)\right)\right\| \\
+				&=\left\|(I-s Q)\left(x^{k}-x^{*}\right)\right\| \\
+				& \leq \max \{|1-s m|,|1-s M|\}\left\|x^{k}-x^{*}\right\|
+			\end{aligned}
+			$$
+			其中$m$ 和 $M$ 分别是$Q $的最小和最大的特征值.
+		}
+	\end{frame}
+	%===================================================
+	\section{2. 变尺度梯度投影}
+	\begin{frame}
+		\frametitle{变尺度梯度投影}
+		第$k$次迭代, 设$H^{k}$ 是一个正定矩阵，并考虑由
+		$$
+		x=\left(H^{k}\right)^{-1 / 2} y
+		$$
+		\onslide<2->{
+			那么问题可以写做
+			$$
+			\begin{array}{l}
+				\text{minimize } h^{k}(y) \equiv f\left(\left(H^{k}\right)^{-1 / 2} y\right) \\
+				\text {subject to }  y \in Y^{k},
+			\end{array}
+			$$
+			其中 $Y^{k}$ 是集合
+			$$
+			Y^{k}=\left\{y \mid\left(H^{k}\right)^{-1 / 2} y \in X\right\} .
+			$$
+		}
+	\end{frame}
+	%---------------------------------------------------------------
+	\begin{frame}
+		\frametitle{变尺度梯度投影}
+		该问题的梯度投影迭代形式如下
+		$$
+		y^{k+1}=y^{k}+\alpha^{k}\left(\bar{y}^{k}-y^{k}\right)
+		$$
+		其中
+		$$
+		\bar{y}^{k}=\left[y^{k}-s^{k} \nabla h^{k}\left(y^{k}\right)\right]^{+}
+		$$
+		
+		\onslide<2->{
+			$\bar{y}^{k}$ 可以定义为使表达式最小化的向量
+			$$
+			\left\|y-y^{k}+s^{k} \nabla h^{k}\left(y^{k}\right)\right\|^{2}=\left(s^{k}\right)^{2}\left\|\nabla h^{k}\left(y^{k}\right)\right\|^{2}+2 s^{k} \nabla h^{k}\left(y^{k}\right)^{\prime}\left(y-y^{k}\right)+\left\|y-y^{k}\right\|^{2}
+			$$
+			over $y \in Y^{k}$.
+			
+		}
+	\end{frame}
+	%--------------------------------------------------------
+	\begin{frame}
+		\frametitle{变尺度梯度投影}
+		忽略表达式
+		$\left(s^{k}\right)^{2}\left\|\nabla h^{k}\left(y^{k}\right)\right\|^{2}$ 并除以$2 s^{k}$,
+		$$
+		\bar{y}^{k}=\arg \min _{y \in Y^{k}}\left\{\nabla h^{k}\left(y^{k}\right)^{\prime}\left(y-y^{k}\right)+\frac{1}{2 s^{k}}\left\|y-y^{k}\right\|^{2}\right\}
+		$$
+		
+		\onslide<2->{
+			通过变化
+			$$
+			x=\left(H^{k}\right)^{-1 / 2} y, \quad x^{k}=\left(H^{k}\right)^{-1 / 2} y^{k}, \quad \bar{x}^{k}=\left(H^{k}\right)^{-1 / 2} \bar{y}^{k}
+			$$
+			$$
+			\nabla h^{k}\left(y^{k}\right)=\left(H^{k}\right)^{-1 / 2} \nabla f\left(x^{k}\right)
+			$$
+			迭代可以写成
+			$$
+			x^{k+1}=x^{k}+\alpha^{k}\left(\bar{x}^{k}-x^{k}\right)
+			$$
+			其中
+			$$
+			\bar{x}^{k}=\arg \min _{x \in X}\left\{\nabla f\left(x^{k}\right)^{\prime}\left(x-x^{k}\right)+\frac{1}{2 s^{k}}\left(x-x^{k}\right)^{\prime} H^{k}\left(x-x^{k}\right)\right\}
+			$$
+		}
+	\end{frame}
+	%===================================================
+	\section{3. 约束牛顿法}
+	\begin{frame}
+		\frametitle{约束牛顿法}
+		$f$ 是二阶连续可微函数.
+		
+		\onslide<2->{
+			考虑变尺度梯度投影方法中的矩阵 $H^{k}=\nabla^{2} f\left(x^{k}\right) ,$
+			$$
+			x^{k+1}=x^{k}+\alpha^{k}\left(\bar{x}^{k}-x^{k}\right)
+			$$
+			%where
+			$$
+			\bar{x}^{k}=\arg \min_{x \in X}\left\{\nabla f\left(x^{k}\right)^{\prime}\left(x-x^{k}\right)+\frac{1}{2 s^{k}}\left(x-x^{k}\right)^{\prime} \nabla^{2} f\left(x^{k}\right)\left(x-x^{k}\right)\right\}
+			$$
+		}
+		
+		\onslide<3->{
+			$s^{k}=1$ $\rightarrow$  $f$在$x^{k}$ 的二阶泰勒展开 \dred{(约束牛顿法)}
+		}
+		
+		\onslide<4->{
+			\hint{梯度投影法}: \footnotehint{$\bar{x}^{k}=\left[x^{k}-s^{k} \nabla f\left(x^{k}\right)\right]^{+}$}
+			
+			
+			\footnotehint{
+				$$
+				\bar{x}^{k}=\argmin_{x \in X}\left\{\nabla f\left(x^{k}\right)^{\prime}\left(x-x^{k}\right)+\frac{1}{2 s^{k}}\left(x-x^{k}\right)^{\prime}  \hint{I} \left(x-x^{k}\right)\right\}
+				$$
+			}
+			
+			
+			\dred{$\bar{x}^{k} = \argmin_{x \in X}$  linear approx. of $f$ %at $x_k$
+				$+$ proximal term \footnotesize{($\frac{1}{2 s^{k}}||x-x^{k}||^2$)}}
+			
+		}
+		
+	\end{frame}
+	
+	
+	
+	
+	%\end{CJK*}
+\end{document}

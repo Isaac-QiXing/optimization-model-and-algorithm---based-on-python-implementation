@@ -1,0 +1,360 @@
+%\documentclass[handout]{beamer}
+\documentclass[11pt]{beamer}
+\include{setting_beamer}
+\usepackage{ctex}
+\begin{document}
+
+\addtobeamertemplate{block begin}{\setlength\abovedisplayskip{0pt}}
+
+\setbeamertemplate{itemize items}{\color{black}$\bullet$}
+
+\pgfdeclareimage[ width=1.0cm]{small-logo}{SMaLL.jpg}
+\logo{\vbox{\vskip0.1cm\hbox{\pgfuseimage{small-logo}}}}
+%\title[Numerical Optimization]{Numerical Optimization}
+
+%\date[2021]{\small    2021}
+
+
+
+\title[数值优化]{5.7 最小二乘问题}
+
+\bigskip
+
+\author[]{
+		 \underline{SMaLL} 
+	}
+	
+\institute[CUP]{
+		\inst{1}
+		中国石油大学（华东）\\
+		SMaLL 课题组   \\
+		\blue{small.sem.upc.edu.cn}\\
+		liangxijunsd@163.com \\ 
+	 
+}
+		
+\date[2023]{\small    2023}
+
+
+\subject{5.7 最小二乘问题}
+\frame{\titlepage}
+	
+%\frame{
+%	\frametitle{Least Squares Problems}
+%	\tableofcontents[hideallsubsections]
+%}
+
+\AtBeginSection[]{
+\begin{frame}
+	\frametitle{最小二乘问题}
+	\tableofcontents[current,currentsubsection]
+\end{frame}
+}
+		
+
+\section{最小二乘法}
+
+\begin{frame}
+\frametitle{最小二乘法}
+
+
+$$
+\begin{array}{l}
+	\text { minimize } \quad f(x)=\frac{1}{2}\|g(x)\|^{2}=\frac{1}{2} \sum_{i=1}^{m}\left\|g_{i}(x)\right\|^{2}\\
+	\text { subject to } \quad x \in \Re^{n}
+\end{array}
+$$
+	其中$g$ 是一个连续可微函数，具有分量函数 $g_{1}, \ldots, g_{m}$ , 其中 $g_{i}: \Re^{n} \rightarrow \Re^{r_{i}} .$
+\end{frame}
+
+\begin{frame}
+\frametitle{示例}
+
+
+假设模型：
+$$
+z=h(\theta, x).
+$$
+
+\hint{目标.  估计 $n$ 个参数 $\theta \in \bbr^{n}$. }
+
+
+\begin{itemize}
+	\item $h$ 是已知的能够刻画这个模型的函数
+	\item $\theta \in \Re^{n}$ 是未知参数的向量
+\item $x \in \Re^{p}$ 是模型的输入
+	\item $z \in \Re^{r}$ 是模型的输出
+	
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{示例}
+	
+
+	
+	\begin{itemize}
+
+\item\hint{数据.} $m$ 个输入-输出对 $\left(x_{1}, z_{1}\right), \ldots,\left(x_{m}, z_{m}\right)$
+
+\item \hint{模型.}  最小化误差平方和
+	$$
+	\frac{1}{2} \sum_{i=1}^{m}\left\|z_{i}-h\left(\theta, x_{i}\right)\right\|^{2}
+	$$
+	\item E.g.,   用三次多项式近似拟合数据:
+	$$
+	h(\theta, x)=\theta_{3} x^{3}+\theta_{2} x^{2}+\theta_{1} x+\theta_{0}
+	$$
+	其中 $\theta=\left(\theta_{0}, \theta_{1}, \theta_{2}, \theta_{3}\right)$ 是未知系数的向量.
+	\end{itemize}
+	
+\end{frame}
+
+
+
+\section{高斯-牛顿（Gauss-Newton）法}
+
+\begin{frame}
+\frametitle{\secno\,高斯-牛顿法}
+
+\dred{注意下面的迭代格式中, $ x^{k}$ 表示迭代点，对应最小二乘拟合问题中的参数， 并不是样本点。   }
+
+	\begin{itemize}
+
+\item
+ \dred{给定迭代点  $x^{k}$, 高斯-牛顿迭代法的基本思想是用如下函数的线性化函数近似 $g$: }
+$$
+\tilde{g}\left(x, x^{k}\right)=g\left(x^{k}\right)+\nabla g\left(x^{k}\right)^{T}\left(x-x^{k}\right)
+$$
+
+\item  最小化线性化函数 $\tilde{g}$ 的范数:
+$$
+\begin{aligned}
+	x^{k+1}=& \arg \min _{x \in \Re^{n}} \frac{1}{2}\left\|\tilde{g}\left(x, x^{k}\right)\right\|^{2} \\
+	=& \arg \min _{x \in \Re^{n}} \frac{1}{2}\left\{\left\|g\left(x^{k}\right)\right\|^{2}\right.+2\left(x-x^{k}\right)^{T} \nabla g\left(x^{k}\right) g\left(x^{k}\right) \\
+	&\quad \left.+\left(x-x^{k}\right)^{T} \nabla g\left(x^{k}\right) \nabla g\left(x^{k}\right)^{T}\left(x-x^{k}\right)\right\} .
+\end{aligned}
+$$	
+
+\end{itemize}
+	
+\end{frame}
+
+\begin{frame}
+\frametitle{高斯-牛顿法}
+假设 $\nabla g\left(x^{k}\right) \nabla g\left(x^{k}\right)^{T}\in \bbr^{n\times n}$ 是可逆的:
+\begin{equation}	
+x^{k+1}=x^{k}-\left(\nabla g\left(x^{k}\right) \nabla g\left(x^{k}\right)^{T}\right)^{-1} \nabla g\left(x^{k}\right) g\left(x^{k}\right)
+\end{equation}
+\begin{itemize}
+\item 如果$g$ 本身是线性函数 $\Rightarrow$ $\|g(x)\|^{2}=\left\|\tilde{g}\left(x, x^{k}\right)\right\|^{2}$,  则该方法会在一次迭代后收敛。
+\item 方向
+$$
+-\left(\nabla g\left(x^{k}\right) \nabla g\left(x^{k}\right)^{T}\right)^{-1} \nabla g\left(x^{k}\right) g\left(x^{k}\right)
+$$
+是下降方向因为  $\nabla g\left(x^{k}\right) g\left(x^{k}\right)  =\nabla \left( 0.5\|g(x)\|^{2}\right) |_{x = x^{k}}$ 且$\left(\nabla g\left(x^{k}\right) \nabla g\left(x^{k}\right)^{T}\right)^{-1}$ 是正定矩阵.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{高斯-牛顿法}
+
+为了确保矩阵   \hint{$\nabla g\left(x^{k}\right) \nabla g\left(x^{k}\right)^{T}$ 是奇异矩阵（或接近奇异）时该方法也有效，迭代公式修正为:}
+$$
+x^{k+1}=x^{k}-\alpha^{k}\left(\nabla g\left(x^{k}\right) \nabla g\left(x^{k}\right)^{T}\dred{+\Delta^{k}}\right)^{-1} \nabla g\left(x^{k}\right) g\left(x^{k}\right)
+$$
+其中   $\Delta^{k}$ 是一个对角矩阵，使得：
+$$
+\nabla g\left(x^{k}\right) \nabla g\left(x^{k}\right)^{T}+\Delta^{k} \text { 为正定矩阵. }
+$$
+\begin{itemize}
+    \item 高斯-牛顿法所使用的方向与梯度相关并且符合梯度下降法的收敛结果。
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{与牛顿法的关系}
+
+\begin{itemize}
+  \item
+假定每个 $g_{i}$ 是一个标量函数,
+$$
+\nabla^2 \left( 0.5\|g(x)\|^{2} \right) =
+\nabla g\left(x^{k}\right) \nabla g\left(x^{k}\right)^{T}
++\sum_{i=1}^{m} \nabla^{2} g_{i}\left(x^{k}\right) g_{i}\left(x^{k}\right)
+$$
+
+\item 在高斯-牛顿法中``近似的 Hessian矩阵为'':
+$$
+\nabla g\left(x^{k}\right) \nabla g\left(x^{k}\right)^{T}.
+$$
+
+\item
+\begin{footnotesize}
+  高斯-牛顿法的迭代公式：
+\begin{equation}	
+x^{k+1}=x^{k}-\left(\nabla g\left(x^{k}\right) \nabla g\left(x^{k}\right)^{T}\right)^{-1}
+ \nabla g\left(x^{k}\right) g\left(x^{k}\right)
+\end{equation}
+\end{footnotesize}
+
+
+\end{itemize}
+
+%The Gauss-Newton iterations are approximate versions of their Newton counterparts, where the second order term is neglected.
+\begin{itemize}
+	\item \blue{优点：}
+	它简化了计算.
+	\item \blue{缺点：}
+	收敛速度较慢.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{与牛顿法的关系}
+
+\begin{itemize}
+  \item \hint{如果被忽略项 $\sum_{i=1}^{m} \nabla^{2} g_{i}\left(x^{k}\right) g_{i}\left(x^{k}\right)$
+       在解附近很小} $\rightarrow$ 良好的收敛速度  %of the Gauss-Newton.
+
+
+
+
+\item \hint{E.g.1}
+当 $g$ 接近线性时, 或者当分量 $g_{i}(x)$ 在解附近很小时.
+
+\item \hint{E.g.2}  $g(x)=0$,   $m=n$.
+
+  $\rightarrow$  被忽略的项在解处接近零。
+\item 假定 $\nabla g\left(x^{k}\right)$ 是可逆的,
+$$
+\left(\nabla g\left(x^{k}\right) \nabla g\left(x^{k}\right)^{T}\right)^{-1} \nabla g\left(x^{k}\right) g\left(x^{k}\right)=\left(\nabla g\left(x^{k}\right)^{T}\right)^{-1} g\left(x^{k}\right)
+$$
+
+\item 高斯-牛顿法的迭代公式化简为：
+\begin{equation}
+x^{k+1}=x^{k}-\left(\nabla g\left(x^{k}\right)^{T}\right)^{-1} g\left(x^{k}\right)
+\end{equation}
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\section{增量梯度方法}
+
+%\begin{frame}
+%\frametitle{Incremental Gradient Methods}
+%
+% Each component $g_{i}$ in the least squares formulation is referred to as a data block. The entire function $g=\left(g_{1}, \ldots, g_{m}\right)$ is the data set.
+%\end{frame}
+
+\begin{frame}
+\frametitle{\secno 增量梯度方法}
+
+\begin{itemize}
+  \item 每个分量  $g_{i}$: 一个数据块.
+
+ %The entire function $g=\left(g_{1}, \ldots, g_{m}\right)$ is the data set.
+
+ \item   $x^k\rightarrow x^{k+1}$: 数据块的循环
+
+ \item \hint{初始: $\psi_{0}=x^{k}$ }
+
+ \item
+进行 $m$ 步循环:
+$$
+\psi_{i}=\psi_{i - 1}-\alpha^{k}
+ \dred{\nabla g_{i}\left(\psi_{i-1}\right) g_{i}\left(\psi_{i-1}\right)}, \quad i=1, \ldots, m
+$$
+
+其中 $\alpha^{k}>0$ 为步长,
+\dred{ 方向为第 $i$个数据块的梯度:}
+$$
+\left.\nabla\left(\frac{1}{2}\left\|g_{i}(x)\right\|^{2}\right)\right|_{x=\psi_{i - 1}}=\nabla g_{i}\left(\psi_{i-1}\right) g_{i}\left(\psi_{i-1}\right)
+$$
+
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{增量梯度方法}
+该方法可以写作如下形式
+\begin{equation}
+x^{k+1}=x^{k}-\alpha^{k} \sum_{i=1}^{m} \nabla g_{i}\left(\psi_{i-1}\right) g_{i}\left(\psi_{i-1}\right)
+\end{equation}
+
+\normaltitle{不同点}
+
+\begin{itemize}
+  \item
+\hint{增量梯度方法的方向: }
+$$
+-\sum_{i=1}^{m} \nabla g_{i}\left(\psi_{i-1}\right) g_{i}\left(\psi_{i-1}\right)
+$$
+
+\item  \hint{梯度法的方向:}
+$$
+-\nabla f\left(x^{k}\right)=-\sum_{i=1}^{m} \nabla g_{i}\left(x^{k}\right) g_{i}\left(x^{k}\right)
+$$
+\end{itemize}
+\end{frame}
+
+
+%\begin{frame}
+%	\frametitle{Incremental Gradient Methods}
+%	It can be viewed as $a$ steepest descent method with errors. We have
+%	$$
+%	x^{k+1}=x^{k}-\alpha^{k}\left(\nabla f\left(x_{k}\right)+e_{k}\right)
+%	$$
+%	where the errors $e_{k}$ are given by
+%	$$
+%	e_{k}=\sum_{i=1}^{m}\left(\nabla g_{i}\left(\psi_{i-1}\right) g_{i}\left(\psi_{i-1}\right)-\nabla g_{i}\left(x^{k}\right) g_{i}\left(x^{k}\right)\right)
+%	$$
+%\end{frame}
+
+\begin{frame}
+\frametitle{增量梯度方法}
+\normaltitle{优势：}
+\begin{itemize}
+	\item %Estimates of $x$ become available as data is accumulated, making the approach
+          适合数据流场景;
+
+	\item %Since the loss function is not applied to all the training data, but is randomly optimized on a certain training data in each iteration,
+每一轮参数的更新速度都大大加快.
+\end{itemize}
+\end{frame}
+
+ 
+\begin{frame}
+		\frametitle{练习题}
+		
+		
+		
+		\begin{enumerate}
+			
+			\item \hint{编程.} 生成 $m$ 个输入-输出对 $\left(x_{1}, z_{1}\right), \ldots,\left(x_{m}, z_{m}\right)$, 其中 $x_i \in \bbr$, 
+			
+			考虑三次多项式近似拟合数据的最小化误差平方和 模型： 
+		\begin{equation}
+			\min_{\theta} \ \frac{1}{2} \sum_{i=1}^{m}\left\|z_{i}-h\left(\theta, x_{i}\right)\right\|^{2}
+	\end{equation}
+			其中 $h$ 为三次多项式 
+			$
+			h(\theta, x)=\theta_{3} x^{3}+\theta_{2} x^{2}+\theta_{1} x+\theta_{0}
+			$，			
+			编程实现 高斯-牛顿法， 求解上述最小化误差平方和模型，计算拟合误差。
+			 
+		\end{enumerate}
+		
+\end{frame}
+	
+ 
+
+\end{document}

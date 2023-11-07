@@ -1,0 +1,454 @@
+\documentclass{beamer}
+%documentclass[handout]{beamer}
+%\usepackage{xeCJK}
+
+%\usepackage[orientation=landscape,size=custom,width=16,height=12,scale=0.5,debug]{beamerposter}
+\usepackage{ctex}
+\include{setting_beamer}
+%\include{setting_2019}
+
+\usepackage{hyperref}
+\hypersetup{hidelinks,
+	colorlinks=true,
+	allcolors=black,
+	pdfstartview=Fit,
+	breaklinks=true}
+
+\begin{document}
+	%\begin{CJK*}{GBK}{kai}
+	\lstdefinestyle{numbers}{numbers=left, stepnumber=1, numberstyle=\tiny, numbersep=10pt}
+	\lstdefinestyle{nonumbers}{numbers=none}
+	
+	\addtobeamertemplate{block begin}{\setlength\abovedisplayskip{0pt}}
+	
+	\setbeamertemplate{itemize items}{\color{black}$\bullet$}
+	
+	\title[最优化模型与算法]{5.6 共轭梯度法}
+	
+     \bigskip
+	
+     \author[]{
+		 \underline{SMaLL} 
+	}
+	
+    \institute[CUP]{
+		\inst{1}
+		中国石油大学（华东）\\
+		SMaLL 课题组   \\
+		\blue{small.sem.upc.edu.cn}\\
+		liangxijunsd@163.com \\ 
+	 
+}
+		
+	\date[2023]{\small    2023}
+	
+	
+	
+	\subject{ optimization}
+	
+	\frame{\titlepage}
+	
+	%\frame{
+	%	\frametitle{}
+	%	\tableofcontents[hideallsubsections]
+	%}
+	
+	%\setcounter{section}{3}
+	
+	%\AtBeginSection[]{
+	%\begin{frame}
+	%	\frametitle{}
+	%	\tableofcontents[currentsection,currentsubsection]
+	%\end{frame}
+	%} %目录	
+	
+	
+	\frame{
+		\frametitle{5.6 共轭梯度法\quad (Conjugate Gradient Method)}
+		\tableofcontents[hideallsubsections]}% 显示在目录中加亮的当前章节
+	
+	%%
+	%% 定义框架页
+	%%
+	\AtBeginSection[]{                              % 在每个Section 前都会加入的Frame
+		%\frame<handout:1>{
+		\begin{frame}
+			\frametitle{5.6 共轭梯度法\quad (Conjugate Gradient Method)}
+			%\tableofcontents[current,currentsubsection] % 显示在目录中加亮的当前章节
+			%\tableofcontents[hideallsubsections,currentsection] % 显示在目录中加亮的当前章节
+			\tableofcontents[current,hideallsubsections]
+		\end{frame}
+		
+		%}
+	}
+	
+	
+	
+	
+	
+	\section{共轭方向法}
+	\begin{frame}
+		\frametitle{\secno 共轭方向法}
+		
+		\normaltitle{定义}
+	    \hint{给定一个$n \times n$ 的正定矩阵 $Q$,} 一个非零向量的集合 $d^1,\dots,d^k$ 是 \hint{\emph{Q共轭向量}}, 如果
+		\begin{equation}
+			{d^i}^{\top}Q{d^j}=0,
+		\end{equation}
+		对于所有 $i$ 和 $j$ 都有 $i \neq j$.
+		
+		
+			\begin{itemize}
+				\item 如果 $d^l,\dots,d^k$ 是 \emph{Q共轭向量}, 那么它们是线性无关的.
+			\end{itemize}
+			\normaltitle{证明}
+ 假设 $d^k$ 可以表示为其他向量的线性组合, $$d^k={\alpha}^1 d^1+\dots +{\alpha}^{k-1}d^{k-1},$$ 然后左乘 ${d^k}^{\top} Q$,$${d^k}^{\top}Q{d^k}={\alpha}^1{d^k}^{\top}Qd^1+
+				\dots+{\alpha}^{k-1}{d^k}^{\top}Q{\alpha}^{k-1}=0,$$上式不可能成立，因为 $d^k\neq 0$ 且 $Q$ 是正定的.
+			
+		
+		
+	\end{frame}
+	%==============================================================================================
+	\begin{frame}
+		\frametitle{\secno 共轭方向法}
+		%    \vspace{5ex}
+		
+		\begin{itemize}
+			\item \hint{Task. } 二次函数的无约束最小化
+			\begin{equation}
+				\min f(x)=\frac{1}{2}x^{\top}Qx-b^{\top}x.
+			\end{equation}
+			
+			\item \hint{Inputs. }
+			\begin{itemize}
+				\item   给定 $n$ 个 \emph{Q} 共轭方向 $d^0,\dots, d^{n-1}$
+				
+				\item $x^0$ 为任意初始化向量
+				
+			\end{itemize}
+			
+			\item \dred{共轭方向迭代}
+			\begin{itemize}
+				\item
+				\begin{equation}
+					\begin{aligned}
+						\alpha_k & = \dred{ \argmin_{\alpha} f(x^k+{\alpha}d^k) }\\
+						& =\frac{{d^k}^{\top}(b-Qx^k)}{{d^k}^{\top}Q{d^k}} \\
+					\end{aligned}
+				\end{equation}
+				%   $\Rightarrow$ $ =\frac{{d^k}^{\top}(b-Qx^k)}{{d^k}^{\top}Q{d^k}}$;
+				
+				\item
+				\hint{ $
+					x^{k+1}=x^k+{\alpha}^kd^k,\qquad k=0,\dots,n-1
+					$ }
+				
+			\end{itemize}
+			
+		\end{itemize}
+	\end{frame}
+	
+	%------------------------------------------
+	\begin{frame}
+		\frametitle{解释}
+		
+        \mytitle{\secno \secname}
+		
+		\normaltitle{定义}
+			线性空间$V$的线性流形(linear manifold ): $$P=r_0+V_1=\{r_0+\alpha \mid \alpha \in V_1\},$$ 其中$V_1$是$V$的子空间，$r_0\in V$，$V_1$的维数称为线性流形$P$的维数，线性流形是直线、二维平面、\dots、$n-1$维平面的总称。
+			
+		
+		\normaltitle{定理}
+			对于Q共轭方向 $d^0,\cdots,d^{n-1}$,
+			
+			$\Rightarrow$  共轭方向法迭代解 $\{x_k\}$,
+			满足      %\emph{successive iterates minimize $f$ over a progressively expanding linear manifold that eventually includes the global minimum of $f$}.
+			%For each $k, x^{k+1}$ minimizes $f$ over the linear manifold passing through $x^0$ and spanned by the conjugate directions $d^0,\dots ,d^k$, that is,\\
+			\begin{equation}
+				x^{k+1}=\mathop{\arg\min}_{x \in M^k}f(x), \quad k=0,\cdots, n-1
+			\end{equation}
+			其中
+			%\begin{equation}
+			$
+			%    \begin{aligned}
+			M^k=\{x \mid x=x^0+v\},\quad v\in \textnormal{span}\{ d^0,\dots,d^k\}.
+			$
+			%   \end{aligned}
+			%   \end{equation}
+			
+		
+		
+		
+	\end{frame}
+	%-------------------------------------------
+	\begin{frame}{allowframebreaks}
+		\frametitle{解释}
+		\normaltitle{证明}
+			
+			共轭方向. $\Rightarrow$ $\forall\,i$, 
+			$${\frac{d f(x^i+\alpha d^i)}{d \alpha}} \mid _{\alpha ={\alpha}^i} = {\nabla f(x^{i+1})}^{\top}d^i=0.$$
+			
+			我们需要展示:
+			$$
+			\begin{array}{cl}
+				&  x^{k+1} = \argmin_{x\in M^k} f(x) \\
+				\Leftrightarrow &
+				(\alpha^0,\cdots,\alpha^k)
+				=\argmin_{\gamma^0,\cdots,\gamma^k}\,
+				f(x^0 + \gamma^0d^0 + \gamma^k d^k) \\
+				\Leftrightarrow & {\frac{\partial f(x^0+{\gamma}^0 d^0+\dots+{\gamma}^k d^k)}{\partial {\gamma}^i}} \mid _{{\gamma}^j={\alpha}^j,j=0,\dots,k}=
+				\langle \nabla f(x^{k+1}),d^k\rangle
+				=0,\quad i = 0,\dots,k.\\
+			\end{array}
+			$$
+			
+			
+			
+			对于$i=0,\dots,k$,
+			\begin{equation*}
+				\begin{split}
+					{\nabla f(x^{k+1})}^{\top}d^i&={(Qx^{k+1}-b)}^{\top}d^i\\
+					&=\langle{ x^{i+1}+\sum_{j=i+1}^k {\alpha}^jd^j }, Qd^i \rangle -b^{\top}d^i\\
+					&={x^{i+1}}^{\top}Qd^i-b^{\top}d^i
+					={\nabla f(x^{i+1})}^{\top}d^i
+					= 0.\\
+				\end{split}
+			\end{equation*}
+			%    so,for $i=0,\dots,k$,\\
+			%    \begin{equation}
+			%    {\nabla f(x^{k+1})}^{\top}d^i=0,
+			%    \end{equation}
+			%
+			% $\Rightarrow$ ${\frac{\partial f(x^0+{\gamma}^0 d^0+\dots+{\gamma}^k d^k)}{\partial {\gamma}^i}} \mid _{{\gamma}^j={\alpha}^j,j=0,\dots,k}=0,\quad i = 0,\dots,k. $
+		
+		
+		
+		
+	\end{frame}
+	
+	
+	%------------------------------------------------
+	%\begin{frame}
+	%    \frametitle{Interpretation}
+	%    \begin{proof}
+	%    which equals to $${\frac{\partial f(x^0+{\gamma}^0 d^0+\dots+{\gamma}^k d^k)}{\partial {\gamma}^i}} \mid _{{\gamma}^j={\alpha}^j,j=0,\dots,k}=0,\quad i = 0,\dots,k. $$
+	%    \end{proof}
+	%
+	%
+	%\end{frame}
+	%===================================================
+	\begin{frame}
+		\frametitle{解释}
+		\normaltitle{具体的} 当 $b = 0$，$Q = I$ (单位矩阵)时 %, the expanding manifold minimization property holds.
+		\begin{itemize}
+			\item  $f$ 的等值曲面是同心球;
+			\item  $Q$共轭 $\longrightarrow$ 通常的正交;
+			\item  $n$个正交方向的最小化  $\Rightarrow x^*$ (球的中心).
+		\end{itemize}
+		
+		\bigskip
+		
+		% \begin{figure}
+		%    \centering
+		%    \includegraphics[width=0.35\textwidth]{conjugation1.png}
+		%
+		%    \end{figure}
+		
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.4\textwidth]{conjugation1.png}
+			\qquad
+			\includegraphics[width=0.35\textwidth]{conjugation2.png}
+		\end{figure}
+		
+	\end{frame}
+	%================================================================
+	\begin{frame}
+		\frametitle{解释}
+		
+		\normaltitle{一般的}
+		
+		$I$ $\rightarrow $ 一般正定矩阵 $Q$  (缩放 $+$ 旋转)
+		
+		\dred{$y = Q^{\frac{1}{2}}x$:}  $\frac{1}{2}x^{\top}Qx = \frac{1}{2}{\parallel y \parallel}^2$.
+		
+		
+		\begin{itemize}
+			\item 如果\hint{ $w^0,\dots ,w^{n-1}$ } 是 $R^n$中任意正交非零向量,那么会有 %the algorithm
+			$y^{k+1}=y^k+{\alpha}^kw^k,\quad k=0,\dots,n-1$
+			
+			\item 上述方程左乘 $Q^{-\frac{1}{2}}$
+			
+			$\rightarrow$ $x^{k+1}=x^k+{\alpha}^kd^k$, where $d^k=Q^{-\frac{1}{2}}w^k$.
+			\item   \dred{方向 $d^0,\dots,d^{n-1}$是 $Q$共轭的}.
+			
+			
+		\end{itemize}
+		
+		
+	\end{frame}
+	%========================================================
+	\section{生成 $Q$共轭方向}
+	\begin{frame}
+		%	\frametitle{The conjugate function}
+		\frametitle{\secno 生成$Q$共轭方向}
+		
+		\begin{itemize}
+			\item \hint{Task. } 给定任意线性无关向量 ${\xi}^0,\dots,{\xi}^k$
+			
+			构造$Q$共轭方向 $d^0,\dots,d^k$ 对于所有的 $i =0,\dots, k$:
+			\begin{equation}
+				\textnormal{span}\{ d^0,\dots,d^i\}= \textnormal{span}\{  \xi^0,\dots,{\xi}^i\}.
+			\end{equation}
+			
+			
+			\item \hint{Procedure} (\emph{Gram-Schmidt procedure})
+			\begin{enumerate}[(1)]
+				\item $
+				d^0={\xi}^0.
+				$
+				
+				\item
+				假设: 对于  $i < k$, 所选择的$Q$共轭方向 $d^0,\dots, d^i$ 可以使上述性质成立.
+				
+				将 $d^{i+1}$ 表示为
+				\begin{equation}
+					d^{i+1}={\xi}^{i+1}+  c^{(i+1),0}d^0 +\cdots + c^{(i+1),i}d^i
+				\end{equation}
+				
+			\end{enumerate}
+			
+		\end{itemize}
+	\end{frame}
+	
+	%===================================================
+		\begin{frame}
+		\frametitle{\secno 生成 $Q$共轭方向}
+		选择 $c^{(i+1),j}$:  $d^{i+1}$是$d^0,\dots, d^i$的$Q$共轭的向量 :
+		\begin{equation}
+			{d^{i+1}}^{\top}Qd^j={{\xi}^{i+1}}^{\top}Qd^j+({c^{(i+1),0}d^0 +\cdots + c^{(i+1),i}d^i})^{\top}Qd^j=0.
+		\end{equation}
+		因为$d^0,\dots,d^i$是$Q$共轭的:
+		\begin{equation}
+			c^{(i+1),j}=-\frac{{{\xi}^{i+1}}^{\top}Qd^j}{{d^j}^{\top}Qd^j},\quad j=0,\dots,i.
+		\end{equation}
+		\begin{itemize}
+			\item   ${d^i}^{\top}Qd^i\neq 0$
+			\item $d^{i+1} \neq 0$
+			\item  $i$ $\rightarrow$ $i + 1$,格拉姆-施密特过程的性质也显然成立
+			%    \item if the vectors ${\xi}^0,\dots ,{\xi}^i$ are linearly independent, but the next vector ${\xi}^{i+1}$ is linearly dependent on these vectors, then the new vector $d^{i+1}$ will be zero
+		\end{itemize}
+		
+	\end{frame}
+	%==========================================================
+	\begin{frame}
+		\frametitle{步骤}
+		\begin{itemize}
+			\item 给定一组向量${\xi}^0,\dots,{\xi}^k$ \hint{(不一定线性无关)}
+			\item 初始 $d^0={\xi}^0$
+			\item 使 $d^{i+1}={\xi}^{i+1}+\sum_{m=0}^i c^{(i+1)m}d^m$,   $c^{(i+1)j}=-\frac{{{\xi}^{i+1}}^{\top}Qd^j}{{d^j}^{\top}Qd^j}$
+			\item 如果$d^{i+1}=0$  $\rightarrow$ 没有将其置于$Q$共轭方向上
+			\item 如果$d^{i+1}\neq 0$ $\rightarrow $ 将其置于$Q$共轭方向上
+			
+		\end{itemize}
+		
+	\end{frame}
+	%====================================================
+	\section{共轭梯度法}
+	\begin{frame}
+		\frametitle{\secno \secname}
+		\begin{itemize}
+			\item \dred{对梯度向量应用格拉姆-施密特过程，得到了共轭梯度法} \dred{${\xi}^0 = -{g}^0,\dots ,{\xi}^{n-1} = -{g}^{n-1}$}.
+			\item $d^0=-g^0$;
+			
+			\item $d^k=-{g}^k+\sum_{j=0}^{k-1} d^j$, $c^{k,j}=  \frac{{g^k}^{\top}Qd^j}{{d^j}^{\top}Qd^j}$;
+			\item $x^{k+1} = x^k + {\alpha}^kd^k$;
+			\item 当$g^k = 0$时，该方法找到最优解.
+		\end{itemize}
+		
+	\end{frame}
+	
+	
+	%=====================================================
+	\begin{frame}
+		%\frametitle{Proof of the method terminates with an optimal solution after at most $n$ steps}
+        \frametitle{命题1 }
+	
+         
+			\dred{对于二次凸优化，CG方法在最多$n$步后得到最优解.}
+		
+	        \normaltitle{证明} 
+
+		    首先用归纳法证明：迭代停止前生成的所有梯度 $g^k$是线性无关的.\\
+			\begin{itemize}
+				\item $g^0$本身是线性无关的,否则$g^0=0$ %, in which case the method terminates.
+				\item 假设在$k$步后该方法还没有停止,那么$g^0,\dots,g^{k-1}$是线性无关的.
+				\item $g^k=0$,在这种情况下迭代终止.
+				\item  $g^k \neq 0$, $g^k$ 与 $d^0,\dots, d^{k-1}$正交 等价于$g^k$与$g^0,\dots, g^{k-1}$正交.
+				\item $g^k$与$g^0线性无关,\dots, g^{k-1}$,这就完成了归纳法.
+				
+				
+			\end{itemize}
+			
+		
+	\end{frame}
+	%========================================================
+	\begin{frame}
+		\frametitle{简化更新方程}
+		
+		\normaltitle{命题1}
+			共轭梯度法中的方向可由以下算法生成：
+       
+			$d^0=-g^0$;
+
+           \dred{ $d^k=-{g}^k+\beta^kd^{k-1}$,}
+           其中$\beta^k =  \frac{{g^k}^{\top}{g^k}}{{g^{k-1}}^{\top}{g^{k-1}}} $.
+			
+		%\begin{itemize}
+		%\item The directions of conjugate gradient method are generated by $d^k=-{g}^k+\beta^kd^j$, $\beta =  \frac{{g^k}^{\top}{g^k}}{{g^{k-1}}^{\top}{g^{k-1}}} $,$d^0=-g^0$
+		%\item the method terminates with an optimal solution after at most $n$ steps
+		%\end{itemize}
+		
+	\end{frame}
+	
+	
+	\begin{frame}
+		
+			\normaltitle{证明}
+			\begin{itemize}
+				\item $g^{j+1}-g^j=Q(x^{j+1}-x^j)=\alpha_jQd^j$, 其中 ${\alpha}^j \neq 0$, 否则 ${g}^{j+1}={g}^j$,这意味着 ${d}^j=0$.
+				\item ${g^i}^{\top}Qd^j=\frac{1}{\alpha_j}{g^i}^{\top}(g^{j+1}
+				-g^j)=
+				\begin{cases}
+					0,\quad j=0,\dots,i-2,\\
+					\frac{1}{\alpha^j}{g^i}^{\top}g^i,\quad j=i-1,
+				\end{cases}$
+				\item ${d^j}^{\top}Qd^j=\frac{1}{\alpha_j}
+				{d^j}^{\top}(g^{j+1}-g^j)$.
+				\item $\Rightarrow$  \hint{ $d^k=-g^k+\beta_kd^{k-1}, \beta_k=\frac{\ {g^k}^{\top}g^k}{{d^{k-1}}^{\top}(g^k-g^{k-1})},$ }
+				\item 因为 $ d^{k-1}=-g^{k-1}+\beta_{k-1}d^{k-2}$
+				$\Rightarrow$
+				$\beta_k=\frac{ {g^k}^{\top}g^k}{{g^{k-1}}^\top g^{k-1}}$
+				\item 根据   $\langle g^k, g^{k-1}\rangle =0$ $\Rightarrow$ $\beta_k=\frac{{g^k}^\top(g^k-g^{k-1})}
+				{{g^{k-1}}^\top g^{k-1}}$.
+			\end{itemize}
+			
+			
+		
+		
+	\end{frame}
+	
+	\begin{frame}
+          \frametitle{作业}
+		\normaltitle{1.}
+		Python编程：用共轭梯度法求解$f(x_1,x_2)=2{x_1}^2+8{x_2}^2+8x_1x_2$的最小值和最小值点。
+		
+	\end{frame}
+	
+	
+	
+	
+	
+	
+	%\end{CJK*}
+\end{document}
