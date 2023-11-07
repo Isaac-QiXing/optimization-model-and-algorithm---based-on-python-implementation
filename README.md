@@ -73,7 +73,7 @@
   - 5.1 全局优化算法的复杂度
   [PDF](./resources/sec_5.1_3_nonlinear_opt/sec_5.1_3_nonlinear_opt.pdf) 
   [Latex](./resources/sec_5.1_3_nonlinear_opt/sec_5.1_3_nonlinear_opt.tex)
-  [案例代码](resources/sec_5.1_3_nonlinear_opt/code/应用案例5.1 CCCP求解DC规划问题代码)
+  [案例代码](./resources/sec_5.1_3_nonlinear_opt/code/应用案例5.1 CCCP求解DC规划问题代码)
   - 5.2 优化算法构造思想
   [PDF](./resources/sec_5.1_3_nonlinear_opt/sec_5.1_3_nonlinear_opt.pdf) 
   [Latex](./resources/sec_5.1_3_nonlinear_opt/sec_5.1_3_nonlinear_opt.tex)
