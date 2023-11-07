@@ -51,12 +51,12 @@
   - 3.1 优化模型
   - 3.2 凸优化模型
   - 3.3 线性规划
-  [code](./resources/sec_3_Convex_optimization_problems/code)
+  [案例代码](./resources/sec_3_Convex_optimization_problems/code)
   - 3.4 二次规划模型
-  [code](./resources/sec_3_Convex_optimization_problems/code)
+  [案例代码](./resources/sec_3_Convex_optimization_problems/code)
   - 3.5 几何规划
   - 3.6 广义不等式约束
-  [code](./resources/sec_3_Convex_optimization_problems/code)
+  [案例代码](./resources/sec_3_Convex_optimization_problems/code)
   - 3.7 半定规划
   - 练习题
   - 参考文献
