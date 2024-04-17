@@ -35,6 +35,9 @@
 ### 目录
 
 > **点击链接可跳转PDF课件、Latex文件、代码**
+> [PDF课件打包下载](./resources/pdf课件-202404.rar)
+> [随书python代码打包下载](./resources/B20220525-最优化模型与算法-代码202301.zip)
+> [PDF课件+latex源文件打包下载](./resources/最优化模型与算法--课件-20240416.zip)
 
 - 第 1 章 凸集合 
   [PDF](./resources/sec_1_Convex_sets/sec_1_Convex_sets_print.pdf) 
